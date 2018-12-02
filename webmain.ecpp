@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <script src="jquery.js" type="text/javascript"></script>
+        <script type="text/javascript">
+            $(function() {
+                $.getJSON('person.json', { }, function(p) {
+                    $('.firstName').val(p.firstName);
+                    $('.lastName').val(p.lastName);
+                    $('.age').val(p.age);
+                });
+
+                $('.send').click(function() {
+                    $.getJSON(
+                        'storePerson.json',
+                        {
+                            person: {
+                                firstName: $('.firstName').val(),
+                                lastName: $('.lastName').val(),
+                                age: $('.age').val()
+                            }
+                        },
+                        function(reply) {
+                            // we actually do not need a reply in this example
+                        });
+                });
+            })
+        </script>
+    </head>
+    <body>
+
+        first name: <input type="text" class="firstName"><br>
+        last name: <input type="text" class="lastName"><br>
+        age: <input type="text" class="age"><br>
+
+        <input type="button" class="send" name="send">
+
+    </body>
+</html>
+

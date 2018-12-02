@@ -1,0 +1,36 @@
+<%args>
+bool beautify;
+</%args>
+<%pre>
+
+#include <cxxtools/json.h>
+
+namespace
+{
+    struct Person
+    {
+        std::string firstName;
+        std::string lastName;
+        unsigned age;
+    };
+
+    void operator<<= (cxxtools::SerializationInfo& si, const Person& p)
+    {
+        si.addMember("firstName") <<= p.firstName;
+        si.addMember("lastName") <<= p.lastName;
+        si.addMember("age") <<= p.age;
+    }
+}
+
+</%pre>
+<%cpp>
+
+Person p;
+p.firstName = "John";
+p.lastName = "Smith";
+p.age = 27;
+
+reply.out() << cxxtools::Json(p).beautify(beautify);
+reply.setContentType("text/json");
+
+</%cpp>

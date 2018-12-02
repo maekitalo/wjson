@@ -1,0 +1,37 @@
+<%pre>
+
+#include <cxxtools/json.h>
+#include <cxxtools/utf8.h>
+
+namespace
+{
+    struct Person
+    {
+        std::string firstName;
+        std::string lastName;
+        unsigned age;
+    };
+
+    void operator>>= (const cxxtools::SerializationInfo& si, Person& p)
+    {
+        si.getMember("firstName") >>= cxxtools::Utf8(p.firstName);
+        si.getMember("lastName") >>= cxxtools::Utf8(p.lastName);
+        si.getMember("age") >>= p.age;
+    }
+}
+
+</%pre>
+<%args>
+Person person;
+</%args>
+<%cpp>
+
+std::cout << "first name: " << person.firstName << "\n"
+             "last name: " << person.lastName << "\n"
+             "age: " << person.age << "\n";
+
+// we send just an empty json reply back
+reply.out() << "{}";
+reply.setContentType("text/json");
+
+</%cpp>
