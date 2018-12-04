@@ -605,3 +605,61 @@ Or just even nicer (with the even more recent tntnet):
     reply.setContentType("text/json");
 
     </%cpp>
+
+Of course printing to `std::cout` is somewhat useless for our web server but it
+is here just as an example, that we can do something with that.
+
+### Unicode
+
+You may have seen that there is a problem with unicode in the above tntnet
+example. If you enter a non name with a ascii character (like my last name
+'Mäkitalo') and press the store button, tntnet outputs looks ugly.
+
+The problem is, that `std::string` is not unicode safe. Its character
+is just 8 bit and this is not enough for unicode strings.
+
+There are 2 possible solutions, cxxtools provides.
+
+We can use either Utf-8, which fits into a `std::string` or use the cxxtools
+unicode string `cxxtools::String`.
+
+Cxxtools provides a Utf-8 encoder and decoder, which is easy to use in the
+serialization framework. We need to include the header `cxxtools/utf8.h` and
+change the serializer and deserializer of our Person class.
+
+        void operator<<= (cxxtools::SerializationInfo& si, const Person& p)
+        {
+            si.addMember("firstName") <<= cxxtools::Utf8(p.firstName);
+            si.addMember("lastName") <<= cxxtools::Utf8(p.lastName);
+            si.addMember("age") <<= p.age;
+        }
+
+        void operator>>= (const cxxtools::SerializationInfo& si, Person& p)
+        {
+            si.getMember("firstName") >>= cxxtools::Utf8(p.firstName);
+            si.getMember("lastName") >>= cxxtools::Utf8(p.lastName);
+            si.getMember("age") >>= p.age;
+        }
+
+The helper function `cxxtools::Utf8` returns much like the Json function above a
+wrapper class, which has a serialization and deserialization operator. And also
+input and output operators for `std::iostream`, which we do not need here. Now
+the first name we get from the browser, which is Utf-8 encoded is translated
+into a unicode string for the `SerializationInfo`, which supports unicode.
+
+The other solution is not to use std::string but `cxxtools::String` in our Person
+class. Replacing std::string in Person solves the problem.
+
+The `cxxtools::String` has all the methods of a `std::string`. It is actually a
+`std::basic_string<cxxtools::Char>`, where `cxxtools::Char` is a unicode
+character.
+
+It has also a std::ostream operator, which outputs Utf-8 since most output
+devices work with that.
+
+I recommend the latter solution since it is more correct. Note that you can
+access a string by character but if you have a Utf-8 encoded data in a
+`std::string` it is somewhat useless. It does not make any sense to access a
+utf-8 string byte by byte. If the `std::string` _lastName_ contains my last name
+(Mäkitalo), then `lastName[1]` returns the first byte of the umlaut _a_. But if
+it is a `cxxtools::String`, then it returns exactly the umlaut _a_.

@@ -7,15 +7,15 @@ namespace
 {
     struct Person
     {
-        std::string firstName;
-        std::string lastName;
+        cxxtools::String firstName;
+        cxxtools::String lastName;
         unsigned age;
     };
 
     void operator>>= (const cxxtools::SerializationInfo& si, Person& p)
     {
-        si.getMember("firstName") >>= cxxtools::Utf8(p.firstName);
-        si.getMember("lastName") >>= cxxtools::Utf8(p.lastName);
+        si.getMember("firstName") >>= p.firstName;
+        si.getMember("lastName") >>= p.lastName;
         si.getMember("age") >>= p.age;
     }
 }
