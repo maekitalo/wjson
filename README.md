@@ -79,7 +79,7 @@ We created a  `cxxtools::SerializationInfo` and filled it with some data. The
 member function `addMember` creates a sub object in our serialization info
 object.
 
-The function `cxxtools::Json` creates a helper object, which has a output
+The function `cxxtools::Json` creates an helper object, which has a output
 operator to std::ostream, which generates the JSON. The method `beautify`
 enables formatting of the object. Since it returns the same helper object back
 it can be chained like shown here.
@@ -234,11 +234,11 @@ to a file, which is fetched from the command line or if no argument is found,
 standard output is used. Note that `cxxtools::Arg<bool>` removes that -b from
 the command line if found.
 
-Writing that class into a file _wjsonc.cpp_ and compiling with
+Putting that class into a file _wjsonc.cpp_ and compiling with
 
     g++ -o wjsonc -lcxxtools wjsonc.cpp
 
-Creates our program. Running it with _./jsonc -b_ outputs the above structure.
+creates our program. Running it with _./jsonc -b_ outputs the above structure.
 Without -b the output is also valid JSON without any whitespace, which is hard
 to read for humans but compact and easy to read with a JSON deserializer.
 
@@ -339,7 +339,7 @@ standard types:
         si.addMember("spouse") <<= p.spouse;
     }
 
-Converting a object to JSON is now much nicer:
+Converting an object to JSON is now much nicer:
 
     Person p;
     p.firstName = "John";
@@ -467,9 +467,9 @@ you use cxxtools already.
 Reading and writing JSON objects in JavaScript is easy. We use
 [jQuery](https://jquery.com/) for that.
 
-What we want is process our application data in our web application. With our
-JSON serialization it is easy to transport application data from Tntnet to our
-client web application and back to the back end.
+What we want is to process our application data in our web application. With
+our JSON serialization it is easy to transport application data from Tntnet to
+our client web application and back to the back end.
 
 We start with sending objects to the client. Or better by requesting objects
 from the server using jQuery.
@@ -615,8 +615,8 @@ You may have seen that there is a problem with unicode in the above tntnet
 example. If you enter a non name with a ascii character (like my last name
 'Mäkitalo') and press the store button, tntnet outputs looks ugly.
 
-The problem is, that `std::string` is not unicode safe. Its character
-is just 8 bit and this is not enough for unicode strings.
+The problem is, that `std::string` is not unicode safe. Its characters
+are just 8 bit and this is not enough for unicode strings.
 
 There are 2 possible solutions, cxxtools provides.
 
